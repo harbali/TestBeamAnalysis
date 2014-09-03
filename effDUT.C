@@ -139,5 +139,6 @@ void effDUT( ){
 
 	std::cout << std::endl;
 	std::cout << "Eff. of S0: (" << counter7 << "/" << counter6 << ") = " << double(((counter7)/(counter6))) << std::endl;
+
 }
 

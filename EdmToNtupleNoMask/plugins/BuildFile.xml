@@ -1,0 +1,7 @@
+<use name="FWCore/Framework"/>
+<use name="FWCore/PluginManager"/>
+<use name="FWCore/ParameterSet"/>
+<use name="DataFormats/SiPixelDigi"/>
+<use name="DataFormats/Common"/>
+<use name="Phase2TrackerDAQ/SiStripDigi"/>
+<flags EDM_PLUGIN="1"/>

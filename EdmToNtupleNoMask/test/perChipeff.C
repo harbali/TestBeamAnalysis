@@ -14,7 +14,7 @@
 void perChipeff(){
 
 	double window = 4.;
-	double edge = 8.;
+	double edge = 4.;
 	
 	double cbc0_edge_a = 0. + edge;
 	double cbc0_edge_b = 127. - edge;
@@ -39,7 +39,7 @@ void perChipeff(){
 	TH1F *control = new TH1F("",";strip # ;", 256, 0. , 256.);
 	
 	
-	TFile *recofile =  TFile::Open("/nfs/dust/cms/user/harbali/output/recoFiles/RECO_run_478_120vcth.root");
+	TFile *recofile =  TFile::Open("/nfs/dust/cms/user/harbali/output/recoFiles/RECO_run_496_30vcth.root");
 	TTree *recotree = (TTree *) recofile->Get("recotree");
 	recotree->SetBranchAddress("clusters_S0", &clusters_position_S0);
 	recotree->SetBranchAddress("clusters_S1", &clusters_position_S1);
@@ -85,7 +85,7 @@ void perChipeff(){
 						h1->Fill(pos1);
 						if(cluster_size_S0 >= 1){
 							for(unsigned int j = 0; j < cluster_size_S0;++j){
-								if((clusters_position_S0->at(j) > cbc0_edge_a && clusters_position_S0->at(j) < cbc0_edge_b) || (clusters_position_S0->at(j)> cbc1_edge_a && clusters_position_S0->at(j)< cbc1_edge_b)){
+								//if((clusters_position_S0->at(j) > cbc0_edge_a && clusters_position_S0->at(j) < cbc0_edge_b) || (clusters_position_S0->at(j)> cbc1_edge_a && clusters_position_S0->at(j)< cbc1_edge_b)){
 									double pos0 = clusters_position_S0->at(j);
 									if(TMath::Abs(pos1-pos0)*90. < window*90.){
 										counter1++;
@@ -94,7 +94,7 @@ void perChipeff(){
 
 										break;
 									}
-								}
+								//}
 							}
 						}
 					}

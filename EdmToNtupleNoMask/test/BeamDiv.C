@@ -19,10 +19,10 @@ void BeamDiv(){
  	std::vector<double> *clusters_position_S2= 0;
 	std::vector<double> *clusters_position_S3= 0;
 
-	TH1F *h_div = new TH1F("","; #mum; Events", 100, -2000. , 2000.);
+	TH1F *h_div = new TH1F("run_481","; #mum; Events", 100, -3000. , 3000.);
 
 
-	TFile *recofile =  TFile::Open("/nfs/dust/cms/user/harbali/output/recoFiles/RECO_run_480_110vcth.root");
+	TFile *recofile =  TFile::Open("/nfs/dust/cms/user/harbali/output/recoFiles/RECO_run_481_105vcth.root");
 	TTree *recotree = (TTree *) recofile->Get("recotree");
 	recotree->SetBranchAddress("clusters_S0", &clusters_position_S0);
 	recotree->SetBranchAddress("clusters_S1", &clusters_position_S1);
@@ -42,12 +42,13 @@ void BeamDiv(){
 		if (  cluster_size_S0 == 1 &&  cluster_size_S1 == 1 && cluster_size_S2 == 1 &&  cluster_size_S3 == 1){
 			for(size_t iStrip = 0; iStrip < cluster_size_S0; ++iStrip){
 				
-	if(TMath::Abs(clusters_position_S0->at(0) - clusters_position_S1->at(0)) < 4. && TMath::Abs(clusters_position_S2->at(0) - clusters_position_S3->at(0)) < 4.){
-					h_div->Fill((((clusters_position_S0->at(0)+clusters_position_S1->at(0))/2.)*90.) - (((clusters_position_S2->at(0)+clusters_position_S3->at(0))/2.)*80.));
-				}
+	//if(TMath::Abs(clusters_position_S0->at(0) - clusters_position_S1->at(0)) < 4. && TMath::Abs(clusters_position_S2->at(0) - clusters_position_S3->at(0)) < 4.){
+					h_div->Fill((((clusters_position_S0->at(0)+clusters_position_S1->at(0))/2.)*90.) - (((clusters_position_S2->at(0)+clusters_position_S3->at(0))/2.))*80.);
+				//}
 			}
 		}
 	}
+	h_div->Fit("gaus");
 
 	gStyle->SetOptFit(1011);
 	h_div->Draw();

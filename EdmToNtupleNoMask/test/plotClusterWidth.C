@@ -23,7 +23,7 @@ void plotClusterWidth(){
 	TH1F *h_clusters_width_S2 = new TH1F("clusterswidth_S2","clusters_S2",20, 0. , 20.);
 	TH1F *h_clusters_width_S3 = new TH1F("clusterswidth_S3","clusters_S3", 20, 0. , 20.);
 	
-	TFile *recofile =  TFile::Open("RECO_USC.00000478.0001.A.storageManager.00.0000.root");
+	TFile *recofile =  TFile::Open("/nfs/dust/cms/user/harbali/output/recoFiles/RECO_run_481_105vcth.root");
 	TTree *recotree = (TTree *) recofile->Get("recotree");
 	recotree->SetBranchAddress("clusterwidth_S0", &clusters_width_S0);
 	recotree->SetBranchAddress("clusterwidth_S1", &clusters_width_S1);
@@ -52,6 +52,7 @@ void plotClusterWidth(){
 	}
 
 	TCanvas *c1 = new TCanvas("c1","c1",700,500);
+	c1->SetLogy();
 	h_clusters_width_S0->SetLineColor(1);
 	h_clusters_width_S0->Draw();
 	h_clusters_width_S1->SetLineColor(2);

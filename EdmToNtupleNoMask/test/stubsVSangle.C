@@ -16,15 +16,12 @@ void stubsVSangle(){
 
 	double angle, MV, sigma;
 	int n = 11;
-	//int ex = 0;
 
 	TGraphErrors *g1 = new TGraphErrors();
 
-	ifstream fp;
+	ifstream fp; 
 	fp.open("stubsVsAngle.txt");
 
-	TF1 *func = new TF1("fit","[0] + [1]*tan([2]+x)");
-	func->SetParNames ("shift","spacing","ang0");
 
 	while(!fp.eof()){
 		for (int i = 0 ; i < n ; ++i){
@@ -34,7 +31,16 @@ void stubsVSangle(){
 		}
 	}
 
+
+	TF1 *func = new TF1("fit","[0] + [1]*tan([2]+x)");
+	func->SetParNames ("shift","spacing","ang0");
+	// set starting parameters but not fixing any
+	func->SetParameter(0, 0.5);
+	func->SetParameter(1, 2.75);
+	func->SetParameter(2, 0.02);
+
 	g1->Fit("fit");
+	
 	fp.close();
 
 	g1->SetMarkerStyle(20);
@@ -46,7 +52,7 @@ void stubsVSangle(){
 	g1->GetYaxis()->SetTitle("Delta strip (mv)[mm]");
 	g1->SetTitle("rotated DUT");
 
-	leg = new TLegend(0.3,0.8,0.6,0.9);
+	TLegend* leg = new TLegend(0.3,0.8,0.6,0.9);
 	leg->SetFillColor(0);
 	//leg->SetLineColor(0);
 	leg->AddEntry(g1,"mv","pl");

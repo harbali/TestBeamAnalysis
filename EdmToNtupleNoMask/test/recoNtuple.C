@@ -9,9 +9,17 @@
 #include "TMath.h"
 #include "TLegend.h"
 #include <iomanip>
-
-void recoNtuple(){
+#include <string>
+ 
+TFile *f1;
+TTree *duttree;
+//const char* fin1, const char* fout
+void recoNtuple(const char* fin1,int RUN, int angle, int threshold_0, int threshold_1){
 	//open rawfile
+
+	f1 = TFile::Open(fin1);
+	duttree = (TTree*)f1->Get("tree");
+
 	unsigned int    events(-9999);
 	unsigned int    run(-9999);
 	unsigned int    tdcPhase(9999);
@@ -25,8 +33,8 @@ void recoNtuple(){
 	std::vector<int> *channel_S2 = 0;
 	std::vector<int> *channel_S3 = 0;
 
-	TFile *dutFile = TFile::Open("RAW_USC.00000478.0001.A.storageManager.00.0000.root");
-	TTree *duttree = (TTree *) dutFile->Get("tree");
+	//TFile *dutFile = TFile::Open("../../output/rawFiles/RAW_USC.00000478.0001.A.storageManager.00.0000.root");
+	//TTree *duttree = (TTree *) dutFile->Get("tree");
 	duttree->SetBranchAddress("event", &events);
 	duttree->SetBranchAddress("run", &run);
 	duttree->SetBranchAddress("dut0_row", &strip_S0);
@@ -65,8 +73,15 @@ void recoNtuple(){
     	std::vector<int> *row_S2_masked = 0;
    	std::vector<int> *row_S3_masked = 0;
 
-	TFile *recofile = new TFile("RECO_USC.00000478.0001.A.storageManager.00.0000.root","RECREATE");
+
+	std::string fout = "RECO_";
+	//fout += std::to_string(angle);
+	fout += "Run_" + std::to_string(RUN) + "_cnmAngle_" + std::to_string(angle) + "_cnmThr_" + std::to_string(threshold_0) + "_infThr_" + std::to_string(threshold_1) + ".root";
+
+
+	TFile *recofile = new TFile(fout.c_str(),"RECREATE");
 	TTree *recotree = new TTree("recotree","reconstructed");
+	TTree *metaData = new TTree("metaData","reconstructed");
 	recotree->Branch("events" , &events );
 	recotree->Branch("run" , &run );
 	recotree->Branch("row_S0", &strip_S0);
@@ -91,11 +106,17 @@ void recoNtuple(){
 	recotree->Branch("stubs_module_2",&stubs_module_2);
 	recotree->Branch("tdc", &tdcPhase);
 
+	metaData->Branch("angle", &angle);
+	metaData->Branch("threshold_module_0", &threshold_0);
+	metaData->Branch("threshold_module_1", &threshold_1);
+
+
 	//events loop
 	for (int i =0; i < dutEntries; i++){
 
 		duttree->GetEntry(i);
-//if(events <100){
+		if(tdcPhase >= 5 && tdcPhase <= 11){
+
 		int   size_S0 = strip_S0->size();
 		int   size_S1 = strip_S1->size();
 		int   size_S2 = strip_S2->size();
@@ -327,7 +348,11 @@ void recoNtuple(){
 
 	//end of events loop
 	}
-//}
+}
+
+
+	metaData->Fill();
+
 	recofile->cd();
 
 	h_row_S0->Write();
@@ -339,9 +364,9 @@ void recoNtuple(){
 	h_clusters_S2->Write();
 	h_clusters_S3->Write();
 	recotree->Write();
-
+	metaData->Write();
 	recofile->Close();
-
+	f1->Close();
 	//h_position->Draw();
 }
 
